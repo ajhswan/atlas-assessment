@@ -31,6 +31,7 @@ The assessment is a simple web application that allows you to create, read, upda
 
 # Installation
 
+- Fork the repository
 - Clone the repository
 - DB:
   - Run `docker compose up -d` to start the database
