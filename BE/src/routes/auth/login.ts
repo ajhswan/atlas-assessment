@@ -32,7 +32,7 @@ const login = async (options: LoginParams): Promise<LoginResponse> => {
     throw new AuthenticationError('Invalid login details');
   }
 
-  const match = await bcrypt.compareSync(data.password, user.password);
+  const match = await bcrypt.compare(data.password, user.password);
   if (!match) {
     throw new AuthenticationError('Invalid login details');
   }
