@@ -1,5 +1,4 @@
-import { Outlet, useLocation, useNavigate } from "react-router";
-import { useState, useEffect } from "react";
+import { Outlet, useLocation } from "react-router";
 
 interface Tab {
   id: string;
@@ -15,53 +14,25 @@ export default function AuthLayout() {
   ];
 
   const location = useLocation();
-  const navigate = useNavigate();
-
-  const getInitialTab = () => {
-    const currentTab = tabs.find((tab) => tab.path === location.pathname);
-    return currentTab?.id || tabs[0].id;
-  };
-
-  const [activeTab, setActiveTab] = useState(getInitialTab);
-
-  useEffect(() => {
-    const currentTab = tabs.find((tab) => tab.path === location.pathname);
-    if (currentTab) {
-      setActiveTab(currentTab.id);
-    }
-  }, [location.pathname]);
-
-  const handleTabClick = (tab: Tab) => {
-    setActiveTab(tab.id);
-    navigate(tab.path);
-  };
-
   return (
-    <div className="min-h-screen bg-sky-50 flex items-center justify-center p-8">
+    <div className="min-h-screen bg-sky-50 flex items-start justify-center p-8 pt-20">
       <div className="w-full max-w-xl bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="flex">
           {tabs.map((tab) => (
-            <button
+            <a
               key={tab.id}
-              onClick={() => handleTabClick(tab)}
-              className={`flex-1 py-2 px-4 text-sm font-medium transition-colors ${
-                activeTab === tab.id
+              href={tab.path}
+              className={`flex-1 py-2 px-4 text-sm font-medium transition-colors text-center block ${
+                location.pathname === tab.path
                   ? "bg-white text-blue-900"
                   : "bg-gray-100 text-gray-500 hover:bg-gray-200"
               }`}
             >
               {tab.label}
-            </button>
+            </a>
           ))}
         </div>
         <div className="p-6">
-          <div className="flex items-center mb-6">
-            <div className="flex-1 border-t border-gray-300"></div>
-            <h2 className="px-4 text-lg font-semibold text-blue-900">
-              {tabs.find((tab) => tab.id === activeTab)?.label}
-            </h2>
-            <div className="flex-1 border-t border-gray-300"></div>
-          </div>
           <Outlet />
         </div>
       </div>

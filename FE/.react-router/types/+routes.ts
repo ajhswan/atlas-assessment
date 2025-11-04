@@ -26,6 +26,11 @@ type Pages = {
   "/auth/recovery": {
     params: {};
   };
+  "/reset-password/:token": {
+    params: {
+      "token": string;
+    };
+  };
   "/posts": {
     params: {};
   };
@@ -37,12 +42,17 @@ type Pages = {
       "*": string;
     };
   };
+  "/*": {
+    params: {
+      "*": string;
+    };
+  };
 };
 
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/auth" | "/auth/login" | "/auth/register" | "/auth/recovery" | "/posts" | "/about" | "/.well-known/*";
+    page: "/" | "/auth" | "/auth/login" | "/auth/register" | "/auth/recovery" | "/reset-password/:token" | "/posts" | "/about" | "/.well-known/*" | "/*";
   };
   "routes/home.tsx": {
     id: "routes/home";
@@ -64,6 +74,10 @@ type RouteFiles = {
     id: "routes/auth.recovery";
     page: "/auth/recovery";
   };
+  "routes/reset-password.$token.tsx": {
+    id: "routes/reset-password.$token";
+    page: "/reset-password/:token";
+  };
   "routes/posts.tsx": {
     id: "routes/posts";
     page: "/posts";
@@ -76,6 +90,10 @@ type RouteFiles = {
     id: "routes/well-known";
     page: "/.well-known/*";
   };
+  "routes/$.tsx": {
+    id: "routes/$";
+    page: "/*";
+  };
 };
 
 type RouteModules = {
@@ -85,7 +103,9 @@ type RouteModules = {
   "routes/auth.login": typeof import("./src/app/routes/auth.login.tsx");
   "routes/auth.register": typeof import("./src/app/routes/auth.register.tsx");
   "routes/auth.recovery": typeof import("./src/app/routes/auth.recovery.tsx");
+  "routes/reset-password.$token": typeof import("./src/app/routes/reset-password.$token.tsx");
   "routes/posts": typeof import("./src/app/routes/posts.tsx");
   "routes/about": typeof import("./src/app/routes/about.tsx");
   "routes/well-known": typeof import("./src/app/routes/well-known.tsx");
+  "routes/$": typeof import("./src/app/routes/$.tsx");
 };

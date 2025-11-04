@@ -42,7 +42,7 @@ const registerUser = async (options: RegisterParams): Promise<AuthResponse> => {
     is_archived: false,
   });
 
-  const emailTemplate = generateWelcomeEmail({ firstName: data.firstName, lastName: data.lastName, email: data.email, url: `${process.env.FRONTEND_URL}/login` });
+  const emailTemplate = generateWelcomeEmail({ firstName: data.firstName, lastName: data.lastName, email: data.email, url: `${process.env.FRONTEND_URL}/auth/login` });
 
   await sendEmail(data.email, emailTemplate, 'Welcome to the Atlas Portal');
 

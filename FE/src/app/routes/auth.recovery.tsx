@@ -1,3 +1,5 @@
+import { RecoveryForm } from "../features/recovery";
+
 export default function Recovery() {
-  return <div>Recovery content</div>;
+  return <RecoveryForm />;
 }

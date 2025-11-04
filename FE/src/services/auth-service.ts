@@ -1,4 +1,4 @@
-import {
+import type {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
@@ -31,8 +31,9 @@ export const authService = {
     return response as AuthValidationResponse;
   },
 
-  async requestPasswordReset(email: ForgotPasswordRequest): Promise<{ data: { success: boolean } }> {
-    const response = await apiClient.post('/auth/forgot-password', email, false);
+  async requestPasswordReset(email: string): Promise<{ data: { success: boolean } }> {
+    const payload: ForgotPasswordRequest = { email };
+    const response = await apiClient.post('/auth/forgot-password', payload, false);
     return response as { data: { success: boolean } };
   },
 

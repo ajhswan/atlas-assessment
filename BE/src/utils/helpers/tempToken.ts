@@ -6,45 +6,45 @@ const Knex = db();
 /**
  * Create a temporary token
  * @param {TempToken} token the token to create
- * @returns {string} token id
+ * @returns {string} token string
  */
 export const createTempToken = async (token: TempToken): Promise<string> => {
-  const res = await Knex('temp_token').insert(token).returning('id');
+  const res = await Knex('temp_token').insert(token).returning('token');
   if (!res) {
     throw new Error('An error Occurred while creating token');
   }
 
   const tempToken = res[0] as TempToken;
-  if (!tempToken.id) {
+  if (!tempToken.token) {
     throw new Error('An error Occurred while creating token');
   }
-  return tempToken.id;
+  return tempToken.token;
 };
 
 /**
  * Delete Token after it has been used
- * @param {string} id - Token ID
+ * @param {string} tokenString - Token string
  * @returns { bool }
  */
-export const deleteTempToken = async (id: string): Promise<string> => {
-  if (!id) {
-    throw new Error('Token ID not found');
+export const deleteTempToken = async (tokenString: string): Promise<string> => {
+  if (!tokenString) {
+    throw new Error('Token not found');
   }
-  return await Knex('temp_token').where('id', id).del().returning('id');
+  return await Knex('temp_token').where('token', tokenString).del().returning('token');
 };
 
 /**
- * Delete Token after it has been used
- * @param {string} id - Token ID
+ * Get Token by token string
+ * @param {string} tokenString - Token string
  * @param {string} type - type of the token
- * @returns { bool }
+ * @returns { TempToken }
  */
-export const getTempToken = async (id: string, type: string): Promise<TempToken> => {
-  if (!id) {
-    throw new Error('Token ID not found');
+export const getTempToken = async (tokenString: string, type: string): Promise<TempToken> => {
+  if (!tokenString) {
+    throw new Error('Token not found');
   }
 
-  const token = (await Knex('temp_token').select('*').where('id', id).returning('id').first()) as TempToken;
+  const token = (await Knex('temp_token').select('*').where('token', tokenString).first()) as TempToken;
 
   if (!token) {
     throw new Error('Invalid Request, Token not found');
