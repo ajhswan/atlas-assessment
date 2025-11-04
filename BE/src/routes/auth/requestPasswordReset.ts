@@ -8,6 +8,9 @@ import { sendEmail } from '@utils/mail';
 import generateForgotPasswordEmail from '@/utils/mail-templates/forgotPassword';
 import { validateOrReject, type ValidationError } from 'class-validator';
 import dayjs from 'dayjs';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_PRIVKEY as string;
 
 /**
  * Login user
@@ -36,11 +39,22 @@ const forgotPassword = async (options: ForgotPasswordParams): Promise<AuthRespon
     };
   }
 
-  const token = await createTempToken({
-    token: { email: data.email },
+  const tokenPayload = {
+    email: data.email,
+    type: 'forgot-password',
+  };
+  
+  const tokenString = jwt.sign(tokenPayload, JWT_SECRET, {
+    expiresIn: '48h',
+  });
+  
+  await createTempToken({
+    token: tokenString,
     expires_at: dayjs().add(48, 'hour').toDate(),
     type: 'forgot-password',
   });
+  
+  const token = tokenString;
 
   const emailTemplate = generateForgotPasswordEmail({ url: `${process.env.FRONTEND_URL}/reset-password/${token}` });
 

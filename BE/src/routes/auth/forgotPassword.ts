@@ -8,6 +8,9 @@ import { cleanErrors } from '@/utils/helpers/cleanErrors';
 import { deleteTempToken, getTempToken } from '@/utils/helpers/tempToken';
 import bcrypt from 'bcryptjs';
 import { validateOrReject, type ValidationError } from 'class-validator';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_PRIVKEY as string;
 
 /**
  * Login user
@@ -33,9 +36,15 @@ const resetPassword = async (options: ResetPasswordParams): Promise<AuthResponse
   const hashedPassword = await bcrypt.hash(data.password, 10);
 
   if (token) {
-    const {
-      token: { email },
-    } = token;
+    // Decode the JWT to get the email
+    let decoded: any;
+    try {
+      decoded = jwt.verify(token.token, JWT_SECRET);
+    } catch (err) {
+      throw new Error('Invalid or expired token');
+    }
+
+    const email = decoded.email;
 
     if (!email) {
       throw new Error('Invalid user data');
