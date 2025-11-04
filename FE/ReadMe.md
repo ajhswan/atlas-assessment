@@ -1,73 +1,67 @@
-# React + TypeScript + Vite
+# Atlas Assessment - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a React + TypeScript application built with React Router v7 and Vite.
 
-Currently, two official plugins are available:
+## Running Locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+# Install dependencies
+pnpm install
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Run development server
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The app will be available at `http://localhost:5173`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Folder Structure
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+FE/
+├── src/
+│   ├── app/
+│   │   ├── routes/          # React Router v7 route files
+│   │   │   ├── _app.tsx     # App layout wrapper
+│   │   │   ├── home.tsx     # Home page
+│   │   │   ├── posts.tsx    # Posts list
+│   │   │   ├── posts.$id.tsx        # View individual post
+│   │   │   ├── posts.$id.edit.tsx   # Edit post
+│   │   │   ├── posts.new.tsx        # Create new post
+│   │   │   ├── auth.tsx             # Auth layout
+│   │   │   ├── auth.login.tsx       # Login page
+│   │   │   ├── auth.register.tsx    # Registration page
+│   │   │   ├── auth.recovery.tsx    # Password recovery
+│   │   │   └── reset-password.$token.tsx  # Password reset
+│   │   ├── features/        # Feature-specific components
+│   │   │   ├── login/       # Login form components
+│   │   │   ├── signup/      # Signup form components
+│   │   │   ├── recovery/    # Recovery form components
+│   │   │   └── reset-password/  # Reset password components
+│   │   ├── api.server.ts    # API client for backend calls
+│   │   ├── session.server.ts # Session management
+│   │   ├── root.tsx         # Root component
+│   │   └── index.css        # Global styles
+│   ├── components/
+│   │   ├── ui/              # Reusable UI components (shadcn-style)
+│   │   ├── Header.tsx       # App header
+│   │   ├── PostCard.tsx     # Post card component
+│   │   ├── PostList.tsx     # Post list component
+│   │   ├── TiptapEditor.tsx # Rich text editor
+│   │   ├── AuthForm.tsx     # Auth form wrapper
+│   │   ├── AuthContainer.tsx # Auth page container
+│   │   └── UserProfileModal.tsx # User profile modal
+│   ├── types/
+│   │   └── api.ts           # TypeScript types for API
+│   └── lib/                 # Utility functions
+├── public/                  # Static assets
+└── package.json
+```
+
+## Tech Stack
+
+- **React Router v7** - File-based routing and SSR
+- **TypeScript** - Type safety
+- **Tailwind CSS v4** - Styling
+- **TanStack Query** - Data fetching and caching
+- **Tiptap** - Rich text editor
+- **React Hook Form** - Form handling

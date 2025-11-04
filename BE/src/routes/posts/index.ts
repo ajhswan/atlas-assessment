@@ -47,6 +47,7 @@ const postsRouter = express.Router({ mergeParams: true });
 postsRouter.post('/', Authentication(), controller(createPost, (req): ControllerParams => {
   return {
     body: req.body as object,
+    user: req.user,
   };
 }));
 

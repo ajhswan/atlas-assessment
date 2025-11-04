@@ -1,11 +1,18 @@
 import { AuthForm } from "@/components/AuthForm";
-import { useFetcher } from "react-router";
+import { useFetcher, useSearchParams } from "react-router";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import type { action } from "@/app/routes/auth.login";
 
 export const LoginForm = () => {
   const fetcher = useFetcher<typeof action>();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("reset") === "success") {
+      toast.success("Password reset successfully! You can now log in with your new password.");
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (fetcher.data?.error) {

@@ -70,7 +70,7 @@ export const getPost = async (id: string, cols: string[] = defaultSelect): Promi
 
 export const createPost = async (data: Post): Promise<Post> => {
   const post = await Knex('posts').insert(data).returning('*');
-  return post as Post;
+  return post[0] as Post;
 };
 
 export const updatePost = async (id: string, data: Post): Promise<Post> => {

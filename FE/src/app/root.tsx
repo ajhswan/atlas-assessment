@@ -21,13 +21,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="font-sans">
-        <header className="fixed top-0 left-0 p-4 z-50">
-          <img 
-            src="https://openvantage.co.za/wp-content/uploads/2024/03/OV_logo_long.png" 
-            alt="OpenVantage Logo" 
-            className="h-8"
-          />
-        </header>
         {children}
         <ToastContainer
           position="top-right"

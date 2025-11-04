@@ -1,6 +1,6 @@
 import { ResponseModel } from "@/types/response-model";
 import notNull from "@/utils/helpers/notNull";
-import { IsDate, Length } from "class-validator";
+import { IsDate, IsOptional, Length } from "class-validator";
 import dayjs from "dayjs";
 
 export interface PostResponse extends ResponseModel {
@@ -13,6 +13,7 @@ export interface GetPostsResponse extends ResponseModel {
 
 export class Post {
   // PK VARCHAR(250) NN id
+  @IsOptional()
   @Length(1, 250)
   id?: string;
 
@@ -22,12 +23,13 @@ export class Post {
   @Length(1, 250)
   content?: string;
 
-  @Length(1, 250)
-  user_id?: string;
+  user_id?: number;
 
+  @IsOptional()
   @IsDate()
   created_at?: Date;
 
+  @IsOptional()
   @IsDate()
   updated_at?: Date;
 
@@ -38,8 +40,8 @@ export class Post {
     if (notNull(data.content)) {
       this.content = data.content;
     }
-    if (notNull(data.title)) {
-      this.title = data.title;
+    if (notNull(data.user_id)) {
+      this.user_id = data.user_id;
     }
 
     if (update) {

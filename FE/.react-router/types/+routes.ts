@@ -34,8 +34,18 @@ type Pages = {
   "/logout": {
     params: {};
   };
-  "/posts": {
+  "/posts/new": {
     params: {};
+  };
+  "/posts/:id/edit": {
+    params: {
+      "id": string;
+    };
+  };
+  "/posts/:id": {
+    params: {
+      "id": string;
+    };
   };
   "/about": {
     params: {};
@@ -55,11 +65,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/auth" | "/auth/login" | "/auth/register" | "/auth/recovery" | "/reset-password/:token" | "/logout" | "/posts" | "/about" | "/.well-known/*" | "/*";
-  };
-  "routes/home.tsx": {
-    id: "routes/home";
-    page: "/";
+    page: "/" | "/auth" | "/auth/login" | "/auth/register" | "/auth/recovery" | "/reset-password/:token" | "/logout" | "/posts/new" | "/posts/:id/edit" | "/posts/:id" | "/about" | "/.well-known/*" | "/*";
   };
   "routes/auth.tsx": {
     id: "routes/auth";
@@ -85,9 +91,25 @@ type RouteFiles = {
     id: "routes/logout";
     page: "/logout";
   };
-  "routes/posts.tsx": {
-    id: "routes/posts";
-    page: "/posts";
+  "routes/_app.tsx": {
+    id: "routes/_app";
+    page: "/" | "/posts/new" | "/posts/:id/edit" | "/posts/:id";
+  };
+  "routes/home.tsx": {
+    id: "routes/home";
+    page: "/";
+  };
+  "routes/posts.new.tsx": {
+    id: "routes/posts.new";
+    page: "/posts/new";
+  };
+  "routes/posts.$id.edit.tsx": {
+    id: "routes/posts.$id.edit";
+    page: "/posts/:id/edit";
+  };
+  "routes/posts.$id.tsx": {
+    id: "routes/posts.$id";
+    page: "/posts/:id";
   };
   "routes/about.tsx": {
     id: "routes/about";
@@ -105,14 +127,17 @@ type RouteFiles = {
 
 type RouteModules = {
   "root": typeof import("./src/app/root.tsx");
-  "routes/home": typeof import("./src/app/routes/home.tsx");
   "routes/auth": typeof import("./src/app/routes/auth.tsx");
   "routes/auth.login": typeof import("./src/app/routes/auth.login.tsx");
   "routes/auth.register": typeof import("./src/app/routes/auth.register.tsx");
   "routes/auth.recovery": typeof import("./src/app/routes/auth.recovery.tsx");
   "routes/reset-password.$token": typeof import("./src/app/routes/reset-password.$token.tsx");
   "routes/logout": typeof import("./src/app/routes/logout.tsx");
-  "routes/posts": typeof import("./src/app/routes/posts.tsx");
+  "routes/_app": typeof import("./src/app/routes/_app.tsx");
+  "routes/home": typeof import("./src/app/routes/home.tsx");
+  "routes/posts.new": typeof import("./src/app/routes/posts.new.tsx");
+  "routes/posts.$id.edit": typeof import("./src/app/routes/posts.$id.edit.tsx");
+  "routes/posts.$id": typeof import("./src/app/routes/posts.$id.tsx");
   "routes/about": typeof import("./src/app/routes/about.tsx");
   "routes/well-known": typeof import("./src/app/routes/well-known.tsx");
   "routes/$": typeof import("./src/app/routes/$.tsx");
