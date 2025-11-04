@@ -2,8 +2,12 @@ import { useLoaderData, useNavigate } from "react-router";
 import type { Route } from "../+types/routes/home";
 import { Header } from "@/components/Header";
 import { PostList } from "@/components/PostList";
+import { requireAuth } from "../session.server";
 
 export async function loader({ request }: Route.LoaderArgs) {
+  // Require authentication - redirects to login if not authenticated
+  await requireAuth(request);
+  
   // Example loader - will be replaced with actual API call
   const mockPosts = [
     {
@@ -28,8 +32,7 @@ export default function Home() {
   };
 
   const handleLogout = () => {
-    // TODO: Implement logout logic
-    navigate("/auth/login");
+    navigate("/logout");
   };
 
   const handlePostClick = (postId: string) => {

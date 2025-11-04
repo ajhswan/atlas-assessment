@@ -8,6 +8,7 @@ export default [
     route("recovery", "routes/auth.recovery.tsx"),
   ]),
   route("reset-password/:token", "routes/reset-password.$token.tsx"),
+  route("logout", "routes/logout.tsx"),
   route("posts", "routes/posts.tsx"),
   route("about", "routes/about.tsx"),
   route(".well-known/*", "routes/well-known.tsx"),

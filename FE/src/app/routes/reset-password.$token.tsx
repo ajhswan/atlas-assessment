@@ -1,5 +1,26 @@
-import { useParams } from "react-router";
+import { useParams, redirect } from "react-router";
 import { ResetPasswordForm } from "../features/reset-password";
+import type { Route } from "../+types/routes/reset-password.$token";
+import { resetPassword } from "../api.server";
+
+export async function action({ request, params }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const password = formData.get("password") as string;
+  const token = params.token;
+
+  if (!token) {
+    return { error: "Invalid reset token" };
+  }
+
+  try {
+    await resetPassword(token, password);
+    return redirect("/auth/login?reset=success");
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : "An error occurred resetting password",
+    };
+  }
+}
 
 export default function ResetPassword() {
   const { token } = useParams();
