@@ -1,4 +1,4 @@
-import { HiOutlineUser, HiOutlineClock } from "react-icons/hi";
+import { HiOutlineClock } from "react-icons/hi";
 
 interface PostCardProps {
   title: string;
@@ -15,13 +15,13 @@ export const PostCard = ({ title, content, author, createdAt, onClick }: PostCar
       className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
     >
       <h3 className="text-xl font-semibold text-blue-900 mb-3">{title}</h3>
-      <p className="text-gray-700 mb-4 line-clamp-3">{content}</p>
+      <div 
+        className="prose prose-sm max-w-none text-gray-700 mb-4 line-clamp-3"
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
       
       <div className="flex items-center gap-4 text-sm text-gray-500">
-        <div className="flex items-center gap-1">
-          <HiOutlineUser className="w-4 h-4" />
-          <span>{author}</span>
-        </div>
+        <span>{author}</span>
         <div className="flex items-center gap-1">
           <HiOutlineClock className="w-4 h-4" />
           <span>{new Date(createdAt).toLocaleDateString()}</span>

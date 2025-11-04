@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router";
+import { useLoaderData, Link } from "react-router";
 import type { Route } from "../+types/routes/posts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -22,15 +22,17 @@ export default function Posts() {
         <h1 className="text-4xl font-bold text-white mb-8">Posts</h1>
         <div className="space-y-4">
           {posts.map((post) => (
-            <Card key={post.id}>
-              <CardHeader>
-                <CardTitle>{post.title}</CardTitle>
-                <CardDescription>By {post.author}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>{post.excerpt}</p>
-              </CardContent>
-            </Card>
+            <Link key={post.id} to={`/posts/${post.id}`}>
+              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                <CardHeader>
+                  <CardTitle>{post.title}</CardTitle>
+                  <CardDescription>By {post.author}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p>{post.excerpt}</p>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>

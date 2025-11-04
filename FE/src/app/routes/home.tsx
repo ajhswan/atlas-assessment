@@ -1,57 +1,61 @@
-import { useLoaderData, useNavigate } from "react-router";
+import { useLoaderData, useNavigate, useSearchParams } from "react-router";
 import type { Route } from "../+types/routes/home";
-import { Header } from "@/components/Header";
 import { PostList } from "@/components/PostList";
 import { requireAuth } from "../session.server";
+import { getPosts } from "../api.server";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  // Require authentication - redirects to login if not authenticated
-  await requireAuth(request);
+  const { token } = await requireAuth(request);
   
-  // Example loader - will be replaced with actual API call
-  const mockPosts = [
-    {
-      id: "1",
-      title: "Welcome to Atlas",
-      content: "This is a sample post to demonstrate the post viewing functionality. You can create your own posts using the Create Post button in the header.",
-      author: "Admin",
-      createdAt: new Date().toISOString(),
-    },
-  ];
+  let posts = [];
+  try {
+    const response = await getPosts(token);
+    posts = (response.data || []).map((post: any) => ({
+      id: post.id,
+      title: post.title,
+      content: post.content,
+      author: post.user_id || "Unknown",
+      createdAt: post.created_at || post.updated_at,
+    }));
+  } catch (error) {
+    console.error("Failed to fetch posts:", error);
+  }
   
-  return { posts: mockPosts };
+  return { posts };
 }
 
 export default function Home() {
   const { posts } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleCreatePost = () => {
-    // TODO: Navigate to create post page or open modal
-    console.log("Create post clicked");
-  };
-
-  const handleLogout = () => {
-    navigate("/logout");
-  };
+  useEffect(() => {
+    const success = searchParams.get("success");
+    if (success === "post-created") {
+      toast.success("Post created successfully!");
+      searchParams.delete("success");
+      setSearchParams(searchParams, { replace: true });
+    } else if (success === "post-deleted") {
+      toast.success("Post deleted successfully!");
+      searchParams.delete("success");
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const handlePostClick = (postId: string) => {
-    // TODO: Navigate to post detail page
-    console.log("Post clicked:", postId);
+    navigate(`/posts/${postId}`);
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header onCreatePost={handleCreatePost} onLogout={handleLogout} />
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-blue-900 mb-2">Posts</h1>
+        <p className="text-gray-600">Browse and interact with community posts</p>
+      </div>
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-blue-900 mb-2">Posts</h1>
-          <p className="text-gray-600">Browse and interact with community posts</p>
-        </div>
-        
-        <PostList posts={posts} onPostClick={handlePostClick} />
-      </main>
-    </div>
+      <PostList posts={posts} onPostClick={handlePostClick} />
+    </main>
   );
 }

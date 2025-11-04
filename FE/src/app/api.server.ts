@@ -21,8 +21,8 @@ interface LoginResponse {
 interface RegisterData {
   email: string;
   password: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   title?: string;
 }
 
@@ -60,6 +60,7 @@ export async function registerUser(data: RegisterData): Promise<LoginResponse> {
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: "Registration failed" }));
+    console.error('Registration error:', error);
     throw new Error(error.message || "Registration failed");
   }
 
@@ -116,4 +117,101 @@ export async function validateToken(token: string): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+/**
+ * Get user data from BE API
+ */
+export async function getUserData(token: string) {
+  const response = await fetch(`${API_URL}/user`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: "Failed to fetch user data" }));
+    throw new Error(error.message || "Failed to fetch user data");
+  }
+
+  return response.json();
+}
+
+/**
+ * Get posts from BE API
+ */
+export async function getPosts(token: string) {
+  const response = await fetch(`${API_URL}/posts`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: "Failed to fetch posts" }));
+    throw new Error(error.message || "Failed to fetch posts");
+  }
+
+  return response.json();
+}
+
+/**
+ * Get single post by ID from BE API
+ */
+export async function getPostById(token: string, postId: string) {
+  const response = await fetch(`${API_URL}/posts/${postId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: "Failed to fetch post" }));
+    throw new Error(error.message || "Failed to fetch post");
+  }
+
+  return response.json();
+}
+
+/**
+ * Delete a post via BE API
+ */
+export async function deletePost(token: string, postId: string) {
+  const response = await fetch(`${API_URL}/posts/${postId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: "Failed to delete post" }));
+    console.error('BE Error:', response.status, error);
+    throw new Error(error.message || `Failed to delete post (${response.status})`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Create a new post via BE API
+ */
+export async function createPost(token: string, data: { title: string; content: string }) {
+    console.log(token, data);
+  const response = await fetch(`${API_URL}/posts`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: "Failed to create post" }));
+    console.error('BE Error:', response.status, error);
+    throw new Error(error.message || `Failed to create post (${response.status})`);
+  }
+
+  return response.json();
 }
