@@ -1,25 +1,36 @@
 import { AuthForm } from "@/components/AuthForm";
-import { useRecovery } from "./useRecovery";
+import { useFetcher } from "react-router";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import type { action } from "@/app/routes/auth.recovery";
 
 export const RecoveryForm = () => {
-  const { handleRecovery, isLoading, error, success } = useRecovery();
+  const fetcher = useFetcher<typeof action>();
 
   useEffect(() => {
-    if (error) {
-      toast.error(error instanceof Error ? error.message : "Password recovery failed");
+    if (fetcher.data?.error) {
+      toast.error(fetcher.data.error);
     }
-  }, [error]);
+  }, [fetcher.data?.error]);
 
   useEffect(() => {
-    if (success) {
+    if (fetcher.data?.success) {
       toast.success("Password reset link sent! Check your email.");
     }
-  }, [success]);
+  }, [fetcher.data?.success]);
+
+  const handleSubmit = (data: any) => {
+    const formData = new FormData();
+    formData.append("email", data.email);
+    
+    fetcher.submit(formData, { method: "POST" });
+  };
+
+  const isLoading = fetcher.state === "submitting";
+  const success = fetcher.data?.success;
 
   return (
-    <AuthForm onSubmit={handleRecovery} className="space-y-3">
+    <AuthForm onSubmit={handleSubmit} className="space-y-3">
       {({ register, formState: { errors } }) => {
         return (
           <>

@@ -31,6 +31,9 @@ type Pages = {
       "token": string;
     };
   };
+  "/logout": {
+    params: {};
+  };
   "/posts": {
     params: {};
   };
@@ -52,7 +55,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/auth" | "/auth/login" | "/auth/register" | "/auth/recovery" | "/reset-password/:token" | "/posts" | "/about" | "/.well-known/*" | "/*";
+    page: "/" | "/auth" | "/auth/login" | "/auth/register" | "/auth/recovery" | "/reset-password/:token" | "/logout" | "/posts" | "/about" | "/.well-known/*" | "/*";
   };
   "routes/home.tsx": {
     id: "routes/home";
@@ -77,6 +80,10 @@ type RouteFiles = {
   "routes/reset-password.$token.tsx": {
     id: "routes/reset-password.$token";
     page: "/reset-password/:token";
+  };
+  "routes/logout.tsx": {
+    id: "routes/logout";
+    page: "/logout";
   };
   "routes/posts.tsx": {
     id: "routes/posts";
@@ -104,6 +111,7 @@ type RouteModules = {
   "routes/auth.register": typeof import("./src/app/routes/auth.register.tsx");
   "routes/auth.recovery": typeof import("./src/app/routes/auth.recovery.tsx");
   "routes/reset-password.$token": typeof import("./src/app/routes/reset-password.$token.tsx");
+  "routes/logout": typeof import("./src/app/routes/logout.tsx");
   "routes/posts": typeof import("./src/app/routes/posts.tsx");
   "routes/about": typeof import("./src/app/routes/about.tsx");
   "routes/well-known": typeof import("./src/app/routes/well-known.tsx");

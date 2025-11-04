@@ -1,20 +1,34 @@
 import { AuthForm } from "@/components/AuthForm";
-import { useSignup } from "./useSignup";
+import { useFetcher } from "react-router";
 import { HiOutlineUser, HiOutlineIdentification, HiOutlineShieldCheck } from "react-icons/hi";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import type { action } from "@/app/routes/auth.register";
 
 export const SignupForm = () => {
-  const { handleSignup, isLoading, error } = useSignup();
+  const fetcher = useFetcher<typeof action>();
 
   useEffect(() => {
-    if (error) {
-      toast.error(error instanceof Error ? error.message : "Registration failed");
+    if (fetcher.data?.error) {
+      toast.error(fetcher.data.error);
     }
-  }, [error]);
+  }, [fetcher.data]);
+
+  const handleSubmit = (data: any) => {
+    const formData = new FormData();
+    formData.append("email", data.email);
+    formData.append("firstName", data.firstName);
+    formData.append("lastName", data.lastName);
+    formData.append("title", data.title || "");
+    formData.append("password", data.password);
+    
+    fetcher.submit(formData, { method: "POST" });
+  };
+
+  const isLoading = fetcher.state === "submitting";
 
   return (
-    <AuthForm onSubmit={handleSignup} className="space-y-3">
+    <AuthForm onSubmit={handleSubmit} className="space-y-3">
       {({ register, formState: { errors }, getValues }) => {
         return (
           <>

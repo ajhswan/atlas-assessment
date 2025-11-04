@@ -1,19 +1,30 @@
 import { AuthForm } from "@/components/AuthForm";
-import { useLogin } from "./useLogin";
+import { useFetcher } from "react-router";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import type { action } from "@/app/routes/auth.login";
 
 export const LoginForm = () => {
-  const { handleLogin, isLoading, error } = useLogin();
+  const fetcher = useFetcher<typeof action>();
 
   useEffect(() => {
-    if (error) {
-      toast.error(error instanceof Error ? error.message : "Login failed");
+    if (fetcher.data?.error) {
+      toast.error(fetcher.data.error);
     }
-  }, [error]);
+  }, [fetcher.data]);
+
+  const handleSubmit = (data: any) => {
+    const formData = new FormData();
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    
+    fetcher.submit(formData, { method: "POST" });
+  };
+
+  const isLoading = fetcher.state === "submitting";
 
   return (
-    <AuthForm onSubmit={handleLogin} className="space-y-3">
+    <AuthForm onSubmit={handleSubmit} className="space-y-3">
       {({ register, formState: { errors } }) => {
         return (
           <>

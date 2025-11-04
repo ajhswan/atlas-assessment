@@ -1,24 +1,34 @@
 import { AuthForm } from "@/components/AuthForm";
-import { useResetPassword } from "./useResetPassword";
+import { useFetcher } from "react-router";
 import { HiOutlineShieldCheck } from "react-icons/hi";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import type { action } from "@/app/routes/reset-password.$token";
 
 interface ResetPasswordFormProps {
   token: string;
 }
 
 export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
-  const { handleResetPassword, isLoading, error } = useResetPassword(token);
+  const fetcher = useFetcher<typeof action>();
 
   useEffect(() => {
-    if (error) {
-      toast.error(error instanceof Error ? error.message : "Password reset failed");
+    if (fetcher.data?.error) {
+      toast.error(fetcher.data.error);
     }
-  }, [error]);
+  }, [fetcher.data]);
+
+  const handleSubmit = (data: any) => {
+    const formData = new FormData();
+    formData.append("password", data.password);
+    
+    fetcher.submit(formData, { method: "POST" });
+  };
+
+  const isLoading = fetcher.state === "submitting";
 
   return (
-    <AuthForm onSubmit={handleResetPassword} className="space-y-3">
+    <AuthForm onSubmit={handleSubmit} className="space-y-3">
       {({ register, formState: { errors }, getValues }) => {
         return (
           <>
